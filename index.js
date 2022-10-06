@@ -25,6 +25,10 @@ const Schema = class {
     this._schema = jsonSchema
   }
 
+  toString () {
+    return JSON.stringify(this._base)
+  }
+
   validate (data) {
     const isValid = this._schema.validate(data)
 
@@ -36,6 +40,10 @@ const Schema = class {
 
     return isValid
   }
+}
+
+Schema.fromString = function (seed) {
+  return new Schema(JSON.parse(seed))
 }
 
 module.exports = Schema
