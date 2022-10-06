@@ -5,8 +5,23 @@ const $id = 'https://example.com/product.schema.json'
 const type = 'object'
 
 const Schema = class {
-  constructor ({ name: title, properties, required }) {
-    const jsonSchema = new Draft07({ $schema, $id, type, title, properties, required })
+  constructor ({ properties, required }) {
+    this._base = { properties, required }
+
+    const jsonSchema = new Draft07({ $schema, $id, type, ...this._base })
+    this._schema = jsonSchema
+  }
+
+  setTitle (title) {
+    this._base = { title, ...this._base }
+    const jsonSchema = new Draft07({ $schema, $id, type, ...this._base })
+    this._schema = jsonSchema
+  }
+
+  setDescription (description) {
+    this._base = { description, ...this._base }
+
+    const jsonSchema = new Draft07({ $schema, $id, type, ...this._base })
     this._schema = jsonSchema
   }
 
