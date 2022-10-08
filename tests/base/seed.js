@@ -48,8 +48,7 @@ describe('From string', function () {
     })
 
     expect(error).to.not.equal(undefined)
-    const err = error.details[0]
-    expect(err.message).to.equal('"id" must be a string')
+    expect(error.message).to.equal('"id" must be a string')
   })
 
   it('Should return no errors for user schema', async function () {
@@ -72,7 +71,6 @@ describe('From string', function () {
     })
 
     expect(error).to.not.equal(undefined)
-    const err = error.details[0]
-    expect(err.message).to.equal('"email" is required')
+    expect(error.message).to.equal('"email" is required')
   })
 })
