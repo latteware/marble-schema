@@ -1,33 +1,28 @@
 /* global describe, expect, it */
 const Schema = require('../../index')
+const { types } = Schema
 
 const idSchema = new Schema({
-  properties: {
-    productId: {
-      description: 'The unique identifier for a product',
-      type: 'integer'
-    }
-  },
-  required: ['productId']
+  productId: types.number
 })
 
 describe('Validate', function () {
   it('Should return no errors', async function () {
-    const errors = idSchema.validate({
+    const error = idSchema.validate({
       productId: 3
     })
 
-    expect(errors.length).to.equal(0)
+    expect(error).to.equal(undefined)
   })
 
-  it('Should return error not a int', async function () {
-    const errors = idSchema.validate({
+  it('Should return error not a number', async function () {
+    const error = idSchema.validate({
       productId: 'foo'
     })
 
-    expect(errors.length).to.equal(1)
-    const err = errors[0]
-    expect(err.message).to.equal('Expected `foo` (string) in `#/productId` to be of type `integer`')
+    expect(error).to.not.equal(undefined)
+    const err = error.details[0]
+    expect(err.message).to.equal('"productId" must be a number')
   })
 })
 
@@ -52,12 +47,7 @@ describe('isValid', function () {
 describe('Optionals', function () {
   it('Should return isValid true both cases', async function () {
     const getSchema = new Schema({
-      properties: {
-        productId: {
-          uuid: 'The unique identifier for a product',
-          type: 'string'
-        }
-      }
+      uuid: types.string
     })
 
     const hasUuid = getSchema.isValid({ uuid: 'foo' })
