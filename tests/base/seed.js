@@ -1,17 +1,12 @@
 /* global describe, expect, it */
 const Schema = require('../../index')
+const { types } = Schema
 
 const idSchema = new Schema({
-  properties: {
-    productId: {
-      description: 'The unique identifier for a product',
-      type: 'integer'
-    }
-  },
-  required: ['productId']
+  productId: types.string
 })
 
-const seed = '{"properties":{"productId":{"description":"The unique identifier for a product","type":"integer"}},"required":["productId"]}'
+const seed = '{"productId":{"type":"string"}}'
 
 describe('To string', function () {
   it('Should return seed', async function () {
@@ -25,21 +20,22 @@ describe('From string', function () {
   it('Should return no errors', async function () {
     const schema = Schema.fromString(seed)
 
-    const errors = schema.validate({
-      productId: 5
+    const error = schema.validate({
+      productId: 'foo'
     })
 
-    expect(errors.length).to.equal(0)
+    expect(error).to.equal(undefined)
   })
 
   it('Should return error not a int', async function () {
     const schema = Schema.fromString(seed)
-    const errors = schema.validate({
-      productId: 'foo'
+
+    const error = schema.validate({
+      productId: 5
     })
 
-    expect(errors.length).to.equal(1)
-    const err = errors[0]
-    expect(err.message).to.equal('Expected `foo` (string) in `#/productId` to be of type `integer`')
+    expect(error).to.not.equal(undefined)
+    const err = error.details[0]
+    expect(err.message).to.equal('"productId" must be a string')
   })
 })
